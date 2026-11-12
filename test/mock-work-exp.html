@@ -1,0 +1,17 @@
+<!doctype html><html><body><dialog open data-testid="dialog"><form>
+<p>Apply to SYTalent 4/6 pages</p><h3>Work experience (1 required)</h3>
+<div><label for="t">Your title*</label><input id="t" type="text" value="Back End Developer"></div>
+<div><label for="c">Company</label><input id="c" type="text" value="Test Company"></div>
+<div><p>Dates of employment</p>
+  <div><p>From</p>
+    <div><div><select id="fm" aria-label="Month"><option>Month</option><option>January</option><option>December</option></select></div>
+         <div><select id="fy" aria-label="Year"><option>Year</option><option>2026</option><option>2025</option><option>2024</option></select></div></div></div>
+  <div><input type="checkbox" id="cur"><label for="cur">I currently work here</label></div>
+  <div id="to"><p>To</p>
+    <div><div><select id="tm" aria-label="Month"><option>Month</option><option>January</option><option>June</option></select></div>
+         <div><select id="ty" aria-label="Year"><option>Year</option><option>2026</option><option>2025</option></select></div></div></div>
+</div>
+<div><label for="city">City</label><input id="city" type="text" value=""></div>
+<button type="button">Next</button></form></dialog>
+<script>document.getElementById('cur').addEventListener('change', e => { if (e.target.checked) document.getElementById('to').remove(); });</script>
+</body></html>

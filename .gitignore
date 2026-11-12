@@ -1,0 +1,11 @@
+node_modules/
+chrome-profile/
+debug/
+applied.jsonl
+unanswered.jsonl
+resume.pdf
+test/profile-copy.json
+.DS_Store
+# your personal answers never go to git; profile.example.json is the shared template
+profile.json
+extension/profile.json

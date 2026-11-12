@@ -1,0 +1,37 @@
+{
+  "searches": [
+    { "keywords": "Java Developer", "location": "India" },
+    { "keywords": "Backend Developer", "location": "India" },
+    { "keywords": "Software Engineer", "location": "Delhi, India" }
+  ],
+  "filters": {
+    "_doc": "postedWithin: day|week|month. experienceLevels: 1 intern, 2 entry, 3 associate, 4 mid-senior. workTypes: 1 onsite, 2 remote, 3 hybrid. sortBy: DD (date) or R (relevance).",
+    "postedWithin": "week",
+    "experienceLevels": [2, 3],
+    "workTypes": [],
+    "sortBy": "DD",
+    "easyApplyOnly": true
+  },
+  "limits": {
+    "maxApplicationsPerRun": 50,
+    "maxPagesPerSearch": 5,
+    "delayBetweenJobsSec": [40, 110],
+    "delayBetweenActionsMs": [600, 1800],
+    "longBreakEveryNJobs": 12,
+    "longBreakSec": [240, 480]
+  },
+  "behaviour": {
+    "dryRun": true,
+    "askOnUnknownQuestion": true,
+    "unfollowCompany": true,
+    "skipIfTitleMatches": ["senior", "lead", "principal", "staff", "manager", "architect", "intern", "\\biii\\b", "\\biv\\b", "director", "head of", "sde ?[3-9]", "\\bl[4-9]\\b", "\\.net", "php", "ios", "android", "flutter", "salesforce", "sap\\b"],
+    "skipIfCompanyMatches": ["VakeelSaab"],
+    "skipIfDescriptionMatches": ["[5-9]\\+? ?years", "[1-9][0-9]\\+? ?years"],
+    "maxQuestionRetries": 2
+  },
+  "paths": {
+    "userDataDir": "./chrome-profile",
+    "appliedLog": "./applied.jsonl",
+    "unansweredLog": "./unanswered.jsonl"
+  }
+}

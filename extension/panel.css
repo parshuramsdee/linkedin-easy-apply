@@ -1,0 +1,17 @@
+#ea-panel { position: fixed; right: 16px; bottom: 16px; width: 340px; max-height: 70vh; overflow: auto; z-index: 2147483647;
+  background: #fff; color: #111; border: 1px solid #0a66c2; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,.25);
+  font: 13px/1.4 -apple-system, system-ui, sans-serif; padding: 10px 12px; }
+#ea-panel * { box-sizing: border-box; }
+#ea-panel h4 { margin: 0 0 6px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+#ea-panel .ea-status { color: #444; min-height: 18px; margin-bottom: 6px; white-space: pre-wrap; }
+#ea-panel .ea-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+#ea-panel button { background: #0a66c2; color: #fff; border: 0; border-radius: 16px; padding: 5px 11px; cursor: pointer; font-size: 13px; }
+#ea-panel button.ea-secondary { background: #eef3f8; color: #0a66c2; border: 1px solid #0a66c2; }
+#ea-panel button:disabled { opacity: .5; cursor: default; }
+#ea-panel .ea-q { margin: 6px 0; padding: 6px; background: #fff7e6; border: 1px solid #f0c36d; border-radius: 6px; }
+#ea-panel .ea-q label { display: block; font-weight: 600; margin-bottom: 3px; }
+#ea-panel .ea-q input, #ea-panel .ea-q select, #ea-panel .ea-q textarea { width: 100%; padding: 4px 6px; border: 1px solid #bbb; border-radius: 4px; font-size: 13px; }
+#ea-panel .ea-small { font-size: 11px; color: #666; }
+#ea-panel .ea-min { width: auto; max-height: none; padding: 6px 10px; }
+#ea-panel .ea-min > *:not(h4) { display: none; }
+.ea-badge { display: inline-block; background: #e7f3e7; color: #1a7f37; border: 1px solid #1a7f37; border-radius: 10px; font: 600 11px system-ui; padding: 1px 7px; margin: 2px 6px 2px 0; }

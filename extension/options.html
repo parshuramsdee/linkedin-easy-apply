@@ -1,0 +1,18 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Easy Apply Helper – answers</title>
+<style>body{font:14px system-ui;margin:20px;max-width:900px} textarea{width:100%;height:50vh;font:12px monospace} button{margin-right:8px;padding:6px 12px} .row{margin:10px 0}</style></head>
+<body>
+<h2>Easy Apply Helper</h2>
+<div class="row"><label><input type="checkbox" id="autoNext"> Auto-click Next when a step has no unknown questions (never clicks Submit)</label></div>
+<div class="row"><label><input type="checkbox" id="autoStart"> Auto-start Easy Apply in tabs opened by the batch opener (you only press Submit)</label></div>
+<div class="row"><label><input type="checkbox" id="titleFilter"> Skip senior / lead / manager titles when opening batches</label></div>
+<div class="row">Open <input type="number" id="batch" min="1" max="15" value="5" style="width:60px"> jobs per batch from the search page</div>
+<h3>Learned answers (editable JSON)</h3>
+<textarea id="learned"></textarea>
+<div class="row">
+  <button id="save">Save</button>
+  <button id="export">Export full bank (learned + profile)</button>
+  <button id="reseed">Reload profile.json from the extension folder</button>
+  <button id="clearHistory">Clear opened/applied history</button>
+</div>
+<p id="msg"></p>
+<script src="options.js"></script></body></html>

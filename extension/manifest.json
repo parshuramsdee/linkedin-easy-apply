@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Easy Apply Helper",
+  "version": "0.1.0",
+  "description": "Fills LinkedIn Easy Apply forms from your answers bank, learns new answers, opens jobs in batches.",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["https://www.linkedin.com/*", "https://www.naukri.com/*"],
+  "background": { "service_worker": "background.js" },
+  "options_page": "options.html",
+  "content_scripts": [{
+    "matches": ["https://www.linkedin.com/*", "https://www.naukri.com/*"],
+    "js": ["filler.js", "content.js"],
+    "css": ["panel.css"],
+    "run_at": "document_idle"
+  }]
+}

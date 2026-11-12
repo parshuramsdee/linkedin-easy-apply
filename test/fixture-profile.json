@@ -1,0 +1,722 @@
+{
+  "_note": "Fake profile used only by the tests. Not a real person.",
+  "personal": {
+    "firstName": "Test",
+    "lastName": "User",
+    "fullName": "Test User",
+    "email": "test@example.com",
+    "phoneCountryCode": "India (+91)",
+    "phone": "9999999999",
+    "city": "New Delhi, Delhi, India",
+    "country": "India",
+    "linkedin": "https://www.linkedin.com/in/test-user/",
+    "github": "https://github.com/test-user",
+    "portfolio": "https://test-user.example.com",
+    "leetcode": "https://leetcode.com/u/test-user/",
+    "dob": "01/01/2000",
+    "address": "1 Test Street, New Delhi - 110001",
+    "pincode": "110001",
+    "state": "Delhi"
+  },
+  "resumePath": "./resume.pdf",
+  "defaults": {
+    "yesNoDefault": "Yes",
+    "numericDefault": "1",
+    "textDefault": "N/A"
+  },
+  "answers": [
+    {
+      "match": [
+        "^work from month$"
+      ],
+      "answer": "December"
+    },
+    {
+      "match": [
+        "^work from year$"
+      ],
+      "answer": "2025"
+    },
+    {
+      "match": [
+        "^work to (month|year)$"
+      ],
+      "answer": "SKIP"
+    },
+    {
+      "match": [
+        "^education from month$"
+      ],
+      "answer": "August"
+    },
+    {
+      "match": [
+        "^education from year$"
+      ],
+      "answer": "2024"
+    },
+    {
+      "match": [
+        "^education to month$"
+      ],
+      "answer": "June"
+    },
+    {
+      "match": [
+        "^education to year$"
+      ],
+      "answer": "2026"
+    },
+    {
+      "match": [
+        "^(work )?city$",
+        "^location$"
+      ],
+      "answer": "New Delhi"
+    },
+    {
+      "match": [
+        "^description$",
+        "^responsibilities$"
+      ],
+      "answer": "Own the call-lifecycle and status-resolution module (Spring Boot, Kafka, MySQL) powering call dashboards; fixed 13 production bugs from live call data; built a two-stage webhook verification pipeline; cut SearchCalls API latency ~50% with CompletableFuture parallelism; delivered 20+ REST APIs across 4 microservices and a Gemini-based audio transcription service."
+    },
+    {
+      "match": [
+        "shift timing",
+        "night shift",
+        "us shift",
+        "rotational shift"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "match": [
+        "serving (notice|lwd)",
+        "last working day",
+        "\\blwd\\b"
+      ],
+      "answer": "0 days"
+    },
+    {
+      "match": [
+        "^education degree$",
+        "^degree$",
+        "degree type"
+      ],
+      "answer": "Master's"
+    },
+    {
+      "match": [
+        "^school$",
+        "^university$"
+      ],
+      "answer": "Bharati Vidyapeeth's Institute of Computer Applications and Management"
+    },
+    {
+      "match": [
+        "^your title$",
+        "^job title$"
+      ],
+      "answer": "Associate Software Developer"
+    },
+    {
+      "match": [
+        "^company$"
+      ],
+      "answer": "Test Company"
+    },
+    {
+      "match": [
+        "^country$",
+        "country of residence",
+        "^country/region$"
+      ],
+      "answer": "India"
+    },
+    {
+      "match": [
+        "^middle name$"
+      ],
+      "answer": "SKIP"
+    },
+    {
+      "match": [
+        "(hold|have|possess|valid).*(visa|passport|work permit)",
+        "(visa|passport).*(hold|have)"
+      ],
+      "answer": "No"
+    },
+    {
+      "match": [
+        "^headline$",
+        "profile headline"
+      ],
+      "answer": "Associate Software Developer | Java, Spring Boot, Kafka, MySQL | Backend & Microservices"
+    },
+    {
+      "match": [
+        "^professional experience$",
+        "^experience$",
+        "work experience \\(",
+        "brief.*experience"
+      ],
+      "answer": "Backend engineer (Java, Spring Boot) at Test Company."
+    },
+    {
+      "match": [
+        "^summary$",
+        "about (you|yourself)",
+        "professional summary"
+      ],
+      "answer": "Backend engineer (Java, Spring Boot) at Test Company."
+    },
+    {
+      "match": [
+        "resume.*java",
+        "java.*resume"
+      ],
+      "answer": "Test Company"
+    },
+    {
+      "match": [
+        "notice period",
+        "join(ing)? (date|time)",
+        "how soon",
+        "when can you (start|join)",
+        "days? to join"
+      ],
+      "answer": "0 days"
+    },
+    {
+      "match": [
+        "current (ctc|salary|compensation|pay)",
+        "present (ctc|salary)",
+        "current annual"
+      ],
+      "answer": "4 LPA"
+    },
+    {
+      "match": [
+        "expected (ctc|salary|compensation|pay)",
+        "desired (salary|compensation)",
+        "salary expectation"
+      ],
+      "answer": "6-7 LPA"
+    },
+    {
+      "match": [
+        "total (years?|experience)",
+        "years? of (work|professional|overall|total|relevant)? ?experience",
+        "how many years? of experience",
+        "year(s)? of experience",
+        "^experience in years"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "experience.*\\bjava\\b",
+        "\\bjava\\b.*experience",
+        "years.*\\bjava\\b"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "spring ?boot",
+        "\\bspring\\b"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "microservice"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "\\bkafka\\b"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "hibernate",
+        "\\bjpa\\b"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "\\bsql\\b",
+        "mysql",
+        "postgres",
+        "relational database"
+      ],
+      "answer": "2"
+    },
+    {
+      "match": [
+        "mongodb",
+        "nosql"
+      ],
+      "answer": "2"
+    },
+    {
+      "match": [
+        "\\bredis\\b"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "node\\.?js",
+        "\\bnode\\b",
+        "express"
+      ],
+      "answer": "2"
+    },
+    {
+      "match": [
+        "typescript",
+        "javascript"
+      ],
+      "answer": "2"
+    },
+    {
+      "match": [
+        "\\breact\\b",
+        "next\\.?js",
+        "front ?end"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "python"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "\\baws\\b",
+        "cloud"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "docker",
+        "kubernetes",
+        "\\bk8s\\b"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "\\brest\\b",
+        "api development",
+        "restful"
+      ],
+      "answer": "2"
+    },
+    {
+      "match": [
+        "\\bgenai\\b",
+        "\\bllm\\b",
+        "\\brag\\b",
+        "generative ai",
+        "machine learning",
+        "\\bai\\b"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "backend",
+        "back-end",
+        "software (development|engineering)"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "data structures",
+        "algorithms",
+        "\\bdsa\\b"
+      ],
+      "answer": "2"
+    },
+    {
+      "match": [
+        "\\bgit\\b",
+        "ci/cd",
+        "github actions"
+      ],
+      "answer": "2"
+    },
+    {
+      "match": [
+        "unit test",
+        "junit",
+        "mockito"
+      ],
+      "answer": "1"
+    },
+    {
+      "match": [
+        "legally authori[sz]ed",
+        "authori[sz]ed to work",
+        "eligible to work",
+        "right to work",
+        "work (permit|authori[sz]ation)"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "match": [
+        "require.*(sponsorship|visa)",
+        "visa (sponsorship|status)",
+        "sponsorship"
+      ],
+      "answer": "No"
+    },
+    {
+      "match": [
+        "willing to relocate",
+        "open to relocat",
+        "relocate"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "match": [
+        "work(ing)? (from|at|in) (the )?office",
+        "work from office",
+        "onsite",
+        "on-site",
+        "hybrid",
+        "in-office",
+        "\\d days? a week",
+        "open to this opportunity",
+        "based (in|out of)"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "match": [
+        "comfortable.*(shift|night|rotational)",
+        "rotational"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "match": [
+        "immediate joiner",
+        "join immediately"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "match": [
+        "currently employed",
+        "currently work(ing)?( here)?",
+        "present employer"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "match": [
+        "background (check|verification)"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "match": [
+        "18 years",
+        "over 18",
+        "above 18",
+        "age of 18"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "match": [
+        "bachelor",
+        "graduate degree",
+        "degree in computer"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "match": [
+        "master'?s"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "match": [
+        "have you (previously )?(worked|applied).*(company|us)",
+        "former employee",
+        "previously employed"
+      ],
+      "answer": "No"
+    },
+    {
+      "match": [
+        "referred",
+        "referral"
+      ],
+      "answer": "No"
+    },
+    {
+      "match": [
+        "privacy policy",
+        "terms",
+        "consent",
+        "agree"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "match": [
+        "current (job )?title",
+        "current role",
+        "designation"
+      ],
+      "answer": "Associate Software Developer"
+    },
+    {
+      "match": [
+        "current (company|employer|organi[sz]ation)"
+      ],
+      "answer": "Test Company"
+    },
+    {
+      "match": [
+        "highest (level of )?education",
+        "highest qualification",
+        "education level"
+      ],
+      "answer": "Master's Degree"
+    },
+    {
+      "match": [
+        "date of birth",
+        "\\bdob\\b",
+        "birth ?date"
+      ],
+      "answer": "@personal.dob"
+    },
+    {
+      "match": [
+        "^(?!.*e-?mail).*\\b(address|street)\\b"
+      ],
+      "answer": "@personal.address"
+    },
+    {
+      "match": [
+        "pin ?code",
+        "zip",
+        "postal"
+      ],
+      "answer": "@personal.pincode"
+    },
+    {
+      "match": [
+        "\\bstate\\b"
+      ],
+      "answer": "@personal.state"
+    },
+    {
+      "match": [
+        "leetcode",
+        "coding profile",
+        "competitive programming"
+      ],
+      "answer": "@personal.leetcode"
+    },
+    {
+      "match": [
+        "bachelor.*(university|college|institution|institute)",
+        "(university|college|institution).*bachelor",
+        "undergraduate (college|university|institution)"
+      ],
+      "answer": "Backend engineer (Java, Spring Boot) at Test Company."
+    },
+    {
+      "match": [
+        "bachelor.*(percentage|cgpa|gpa|marks|grade)",
+        "(percentage|cgpa|gpa|marks).*bachelor",
+        "undergraduate.*(percentage|cgpa|gpa)"
+      ],
+      "answer": "64.57%"
+    },
+    {
+      "match": [
+        "bachelor.*(year|passing|graduat)",
+        "(year|passing).*bachelor"
+      ],
+      "answer": "2023"
+    },
+    {
+      "match": [
+        "master.*(percentage|cgpa|gpa|marks|grade)",
+        "(percentage|cgpa|gpa|marks).*master",
+        "post ?graduat.*(percentage|cgpa|gpa)"
+      ],
+      "answer": "86%"
+    },
+    {
+      "match": [
+        "field of study",
+        "major",
+        "specialization",
+        "stream",
+        "branch"
+      ],
+      "answer": "Computer Applications"
+    },
+    {
+      "match": [
+        "university",
+        "college",
+        "institution"
+      ],
+      "answer": "Bharati Vidyapeeth's Institute of Computer Applications and Management"
+    },
+    {
+      "match": [
+        "\\bcgpa\\b",
+        "\\bgpa\\b",
+        "percentage",
+        "grade"
+      ],
+      "answer": "86%"
+    },
+    {
+      "match": [
+        "graduation year",
+        "year of (passing|graduation)",
+        "passout"
+      ],
+      "answer": "2026"
+    },
+    {
+      "match": [
+        "(current|present) location",
+        "where are you (located|based)",
+        "city"
+      ],
+      "answer": "New Delhi"
+    },
+    {
+      "match": [
+        "preferred location"
+      ],
+      "answer": "New Delhi / Remote"
+    },
+    {
+      "match": [
+        "gender"
+      ],
+      "answer": "Male"
+    },
+    {
+      "match": [
+        "pronoun"
+      ],
+      "answer": "He/Him"
+    },
+    {
+      "match": [
+        "ethnicity",
+        "race",
+        "veteran",
+        "disability"
+      ],
+      "answer": "Decline to self-identify"
+    },
+    {
+      "match": [
+        "english",
+        "language proficiency",
+        "proficiency"
+      ],
+      "answer": "Professional"
+    },
+    {
+      "match": [
+        "linkedin"
+      ],
+      "answer": "@personal.linkedin"
+    },
+    {
+      "match": [
+        "github"
+      ],
+      "answer": "@personal.github"
+    },
+    {
+      "match": [
+        "portfolio",
+        "website"
+      ],
+      "answer": "@personal.portfolio"
+    },
+    {
+      "match": [
+        "country code",
+        "phone code",
+        "dial code"
+      ],
+      "answer": "@personal.phoneCountryCode"
+    },
+    {
+      "match": [
+        "phone",
+        "mobile",
+        "contact number"
+      ],
+      "answer": "@personal.phone"
+    },
+    {
+      "match": [
+        "email"
+      ],
+      "answer": "@personal.email"
+    },
+    {
+      "match": [
+        "first name"
+      ],
+      "answer": "@personal.firstName"
+    },
+    {
+      "match": [
+        "last name",
+        "surname"
+      ],
+      "answer": "@personal.lastName"
+    },
+    {
+      "match": [
+        "full name",
+        "^name$"
+      ],
+      "answer": "@personal.fullName"
+    },
+    {
+      "match": [
+        "cover letter",
+        "why (do you want|are you interested)",
+        "tell us about yourself",
+        "summary",
+        "message to (the )?hiring"
+      ],
+      "answer": "Backend engineer (Java, Spring Boot) at Test Company."
+    }
+  ]
+}

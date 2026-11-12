@@ -1,0 +1,20 @@
+{
+  "name": "linkedin-easy-apply",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "sync": "node sync-extension.js",
+    "test": "node test/test-filler.js && node test/test-ext-filler-offline.js && node test/test-opener-linkedin-offline.js",
+    "push": "node sync-extension.js && git add -A && git commit -m \"update answers/extension\" ; git push",
+    "pull": "git pull && node sync-extension.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "playwright": "^1.49.1"
+  },
+  "private": true
+}
