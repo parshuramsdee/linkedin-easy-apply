@@ -1,6 +1,20 @@
 // Easy Apply Helper: floating panel on LinkedIn job pages and search pages.
 (async () => {
   if (window.top !== window) return;
+  // After the extension is reloaded (↻ / chrome://extensions), scripts already running in open tabs lose
+  // access to chrome.* ("Extension context invalidated"). Detect that and ask for a tab refresh instead of throwing.
+  const alive = () => { try { return !!(chrome.runtime && chrome.runtime.id); } catch { return false; } };
+  let deadShown = false;
+  const onDead = () => {
+    if (deadShown) return; deadShown = true;
+    const s = document.getElementById('ea-status');
+    if (s) s.textContent = '⚠ Helper was reloaded. Refresh this tab (Cmd+R) to use it again.';
+  };
+  const isDeadErr = e => /context invalidated|reading 'local'|reading 'sendMessage'|Receiving end does not exist/i.test(String(e && (e.message || e)));
+  window.addEventListener('unhandledrejection', e => { if (isDeadErr(e.reason)) { e.preventDefault(); onDead(); } });
+  window.addEventListener('error', e => { if (isDeadErr(e.error || e.message)) { e.preventDefault(); onDead(); } });
+  const send = msg => { if (!alive()) { onDead(); return Promise.resolve(); } return chrome.runtime.sendMessage(msg).catch(e => { if (isDeadErr(e)) onDead(); }); };
+  if (!alive()) return;
   const F = window.EAFiller;
   const sleep = ms => new Promise(r => setTimeout(r, ms));
   // HARD RULE: nothing this helper clicks may be a submit control. Submitting is always the user's own click.
@@ -8,11 +22,11 @@
   const safeClick = el => { if (!el) return false; if (isSubmitLike(el)) { console.warn('[EA] refused to click submit-like control', el); return false; } el.click(); return true; };
   window.EAFiller.safeClick = safeClick;
   const store = {
-    async get() { return chrome.storage.local.get(['profile', 'config', 'learned', 'settings', 'opened', 'applied']); },
-    async set(o) { return chrome.storage.local.set(o); },
+    async get() { if (!alive()) { onDead(); return {}; } return chrome.storage.local.get(['profile', 'config', 'learned', 'settings', 'opened', 'applied']); },
+    async set(o) { if (!alive()) { onDead(); return; } return chrome.storage.local.set(o); },
   };
   let S = await chrome.storage.local.get(['profile', 'config', 'learned', 'settings', 'opened', 'applied', 'profileLoadedAt', 'profileMissing']);
-  if (!S.profile) { await chrome.runtime.sendMessage({ type: 'reseed' }).catch(() => {}); S = await store.get(); }
+  if (!S.profile) { await send({ type: 'reseed' }); S = await store.get(); }
   S.learned = S.learned || []; S.opened = S.opened || {}; S.applied = S.applied || {}; S.settings = S.settings || {};
   const bank = () => [...S.learned, ...((S.profile || {}).answers || [])];
   const escapeRe = s => s.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -26,7 +40,7 @@
     const h4 = document.createElement('h4'); const t = document.createElement('span'); t.textContent = '⚡ Easy Apply Helper';
     const min = document.createElement('button'); min.type = 'button'; min.className = 'ea-secondary'; min.id = 'ea-min'; min.textContent = '–';
     const rl = document.createElement('button'); rl.type = 'button'; rl.className = 'ea-secondary'; rl.id = 'ea-reload'; rl.textContent = '↻'; rl.title = 'Reload the extension from disk (after git pull / editing profile.json)';
-    rl.onclick = () => chrome.runtime.sendMessage({ type: 'reloadExt' });
+    rl.onclick = () => send({ type: 'reloadExt' });
     const grp = document.createElement('span'); grp.append(rl, document.createTextNode(' '), min);
     h4.append(t, grp); panel.appendChild(h4);
     for (const [id, cls] of [['ea-status', 'ea-status'], ['ea-unknown', ''], ['ea-actions', 'ea-row'], ['ea-hint', 'ea-small']]) { const d = document.createElement('div'); d.id = id; if (cls) d.className = cls; panel.appendChild(d); }
@@ -133,12 +147,12 @@
     btn('Fill step', () => runStep('manual'), true);
     btn('Next ▶', () => { const n = nextBtn(); n ? safeClick(n) : status('No Next button.'); }, true);
     btn('Mark applied', markApplied, true);
-    btn('Close tab', () => chrome.runtime.sendMessage({ type: 'closeTab' }), true);
+    btn('Close tab', () => send({ type: 'closeTab' }), true);
     $('ea-hint').textContent = (S.profileMissing ? '⚠ profile.json missing: copy profile.example.json to profile.json, fill it, run node sync-extension.js, then ↻. ' : '') + `Alt+A apply · Alt+F fill · Alt+N next · Alt+W close tab. Submit is always your click. Answers loaded ${S.profileLoadedAt ? new Date(S.profileLoadedAt).toLocaleString() : '(unknown)'}; ${S.learned.length} learned.`;
     document.addEventListener('keydown', e => {
       if (!e.altKey) return;
       const k = e.key.toLowerCase();
-      if (k === 'a') safeClick(easyApplyBtn()); else if (k === 'f') runStep('manual'); else if (k === 'n') safeClick(nextBtn()); else if (k === 'w') chrome.runtime.sendMessage({ type: 'closeTab' });
+      if (k === 'a') safeClick(easyApplyBtn()); else if (k === 'f') runStep('manual'); else if (k === 'n') safeClick(nextBtn()); else if (k === 'w') send({ type: 'closeTab' });
     });
     // watch the dialog: fill whenever a step renders; detect submission
     let t = null, hadDialog = false;
@@ -192,11 +206,12 @@
       openBtn.textContent = `Open next ${Math.min(+batchInput.value || 5, rem.length)} jobs`; openBtn.disabled = rem.length === 0;
     };
     const openBatch = async () => {
+      if (!alive()) return onDead();   // do not mark jobs opened if the tabs cannot be opened
       const n = +batchInput.value || 5; const pick = remaining().slice(0, n);   // page order, top to bottom
       if (!pick.length) return status('Nothing new on this page. Scroll down or go to the next page.');
       pick.forEach(j => { S.opened[j.id] = Date.now(); });
       await store.set({ opened: S.opened, settings: { ...S.settings, batch: n } });
-      await chrome.runtime.sendMessage({ type: 'openTabs', urls: pick.map(j => j.url) });
+      await send({ type: 'openTabs', urls: pick.map(j => j.url) });
       refresh();
     };
     const row = document.createElement('div'); row.className = 'ea-row';
@@ -211,6 +226,6 @@
     btn('Close panel', () => panel.remove(), true);
     $('ea-hint').textContent = (site === 'naukri' ? 'Naukri: opens job pages in order. ' : 'Opens Easy Apply jobs in page order; already-applied, external and title-filtered cards are skipped. ') + 'Alt+O = open next batch.';
     document.addEventListener('keydown', e => { if (e.altKey && e.key.toLowerCase() === 'o') openBatch(); });
-    refresh(); setInterval(refresh, 2500);
+    refresh(); const iv = setInterval(() => { if (!alive()) { clearInterval(iv); onDead(); return; } refresh(); }, 2500);
   }
 })();
