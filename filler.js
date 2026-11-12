@@ -58,17 +58,23 @@ function pickOption(options, answer) {
   if (i < 0 && !numeric) i = texts.findIndex(t => t.includes(a) || a.includes(t));
   if (i < 0 && numeric) {
     // numeric answer vs ranges like "1-3 years", "0-1", "3+"; prefer [lo,hi) so 1 -> "1-3" not "0-1"
-    const n = parseFloat(a);
-    const rangeMatch = inclusive => t => {
-      const m = t.match(/(\d+)\s*(?:-|–|to)\s*(\d+)/);
+    // "7,00,000 to 10,00,000" -> "700000 to 1000000"; answer 9 (LPA) vs rupee ranges -> 900000, and 900000 vs "5 - 10 LPA" -> 9
+    const T = texts.map(t => t.replace(/(\d),(?=\d)/g, '$1'));
+    const nums = (T.join(' ').match(/\d+(\.\d+)?/g) || []).map(Number);
+    const n0 = parseFloat(a), big = nums.some(x => x >= 100000), small = nums.length > 0 && nums.every(x => x < 1000);
+    const n = big && n0 < 1000 ? n0 * 100000 : (small && n0 >= 100000 ? n0 / 100000 : n0);
+    const rangeMatch = inclusive => (_, k) => {
+      const t = T[k];
+      const m = t.match(/(\d+(?:\.\d+)?)\s*(?:-|–|to)\s*(\d+(?:\.\d+)?)/);
       if (m) return n >= +m[1] && (inclusive ? n <= +m[2] : n < +m[2]);
-      const p = t.match(/(\d+)\s*\+/);
+      const p = t.match(/(\d+(?:\.\d+)?)\s*(?:\+|or more|and above|& above|above)/);
       if (p) return n >= +p[1];
       const s = t.match(/^(\d+)/);
       return !!s && +s[1] === n;
     };
     i = texts.findIndex(rangeMatch(false));
     if (i < 0) i = texts.findIndex(rangeMatch(true));
+    if (i < 0 && n === 0) i = texts.findIndex(t => /immediate|no notice|^0\b/.test(t));   // notice period 0 -> "Immediate"
   }
   if (i < 0 && /^(yes|y|true)$/.test(a)) i = texts.findIndex(t => /^yes\b/.test(t));
   if (i < 0 && /^(no|n|false)$/.test(a)) i = texts.findIndex(t => /^no\b/.test(t));

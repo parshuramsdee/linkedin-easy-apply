@@ -28,13 +28,18 @@ window.EAFiller = (() => {
     const numeric = /^\d+(\.\d+)?$/.test(a);
     if (i < 0 && !numeric) i = texts.findIndex(t => t.includes(a) || a.includes(t));
     if (i < 0 && numeric) {
-      const n = parseFloat(a);
-      const rm = inc => t => {
-        const m = t.match(/(\d+)\s*(?:-|–|to)\s*(\d+)/); if (m) return n >= +m[1] && (inc ? n <= +m[2] : n < +m[2]);
-        const p = t.match(/(\d+)\s*\+/); if (p) return n >= +p[1];
+      // "7,00,000 to 10,00,000" -> "700000 to 1000000"; answer 9 (LPA) vs rupee ranges -> 900000, and 900000 vs "5 - 10 LPA" -> 9
+      const T = texts.map(t => t.replace(/(\d),(?=\d)/g, '$1'));
+      const nums = (T.join(' ').match(/\d+(\.\d+)?/g) || []).map(Number);
+      const n0 = parseFloat(a), big = nums.some(x => x >= 100000), small = nums.length > 0 && nums.every(x => x < 1000);
+      const n = big && n0 < 1000 ? n0 * 100000 : (small && n0 >= 100000 ? n0 / 100000 : n0);
+      const rm = inc => (_, k) => { const t = T[k];
+        const m = t.match(/(\d+(?:\.\d+)?)\s*(?:-|–|to)\s*(\d+(?:\.\d+)?)/); if (m) return n >= +m[1] && (inc ? n <= +m[2] : n < +m[2]);
+        const p = t.match(/(\d+(?:\.\d+)?)\s*(?:\+|or more|and above|& above|above)/); if (p) return n >= +p[1];
         const s = t.match(/^(\d+)/); return !!s && +s[1] === n;
       };
       i = texts.findIndex(rm(false)); if (i < 0) i = texts.findIndex(rm(true));
+      if (i < 0 && n === 0) i = texts.findIndex(t => /immediate|no notice|^0\b/.test(t));   // notice period 0 -> "Immediate"
     }
     if (i < 0 && /^(yes|y|true)$/.test(a)) i = texts.findIndex(t => /^yes\b/.test(t));
     if (i < 0 && /^(no|n|false)$/.test(a)) i = texts.findIndex(t => /^no\b/.test(t));
@@ -135,8 +140,19 @@ window.EAFiller = (() => {
       const opt = [...e.el.options].find(o => o.text.trim() === chosen); if (!opt) return false;
       e.el.value = opt.value; e.el.dispatchEvent(new Event('input', { bubbles: true })); e.el.dispatchEvent(new Event('change', { bubbles: true }));
     } else if (e.combobox) {
-      e.el.focus(); setNative(e.el, chosen); await sleep(1200);
-      const opt = [...document.querySelectorAll('[role="listbox"] [role="option"]')].find(vis); if (opt && !submitLike(opt)) opt.click();
+      // Typeahead (e.g. "Location (city)"): clear, type, fire key events so LinkedIn fetches suggestions,
+      // then click the suggestion that matches the answer (not just the first one).
+      e.el.focus(); setNative(e.el, ''); setNative(e.el, chosen);
+      for (const type of ['keydown', 'keyup']) e.el.dispatchEvent(new KeyboardEvent(type, { bubbles: true, key: chosen.slice(-1) }));
+      const want = chosen.toLowerCase().trim();
+      let opt = null;
+      for (let i = 0; i < 8 && !opt; i++) {   // suggestions arrive asynchronously: poll up to ~2.4s
+        await sleep(300);
+        const opts = [...document.querySelectorAll('[role="listbox"] [role="option"]')].filter(vis);
+        const txt = o => (o.innerText || '').toLowerCase().replace(/\s+/g, ' ').trim();
+        opt = opts.find(o => txt(o).startsWith(want)) || opts.find(o => txt(o).includes(want)) || (i >= 5 ? opts[0] : null);
+      }
+      if (opt && !submitLike(opt)) opt.click(); else if (!opt) return false;
     } else {
       e.el.focus(); setNative(e.el, chosen); e.el.blur();
     }
@@ -162,7 +178,7 @@ window.EAFiller = (() => {
       if (h && h.answer === 'SKIP') continue;
       let answer = h ? h.answer : null;
       const digitsOf = a => { const d = (a || '').match(/\d+(\.\d+)?/); return d ? d[0] : null; };
-      if (answer && (e.numeric || rejected) && !e.options) answer = digitsOf(answer);
+      if (answer && (e.numeric || (rejected && !e.combobox)) && !e.options) answer = digitsOf(answer);
       if (answer && await apply(e, answer)) {
         // if LinkedIn flags the value, retry once with just the number ("4 LPA" -> "4", "0 days" -> "0")
         if (!e.options) {
