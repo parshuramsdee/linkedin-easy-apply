@@ -55,7 +55,37 @@
     if (panel.parentElement !== host) host.appendChild(panel);
   };
   const $ = id => panel.querySelector('#' + id);
-  $('ea-min').onclick = () => panel.classList.toggle('ea-min');
+  $('ea-min').onclick = () => { panel.classList.toggle('ea-min'); clampPanel(); };
+
+  // ---------- drag by the title bar; position remembered across pages ----------
+  const POS_KEY = 'ea-panel-pos';
+  const placePanel = (left, top) => {
+    const r = panel.getBoundingClientRect();
+    left = Math.min(Math.max(0, left), Math.max(0, innerWidth - r.width));
+    top = Math.min(Math.max(0, top), Math.max(0, innerHeight - 40)); // keep the title bar reachable
+    Object.assign(panel.style, { left: left + 'px', top: top + 'px', right: 'auto', bottom: 'auto' });
+  };
+  const clampPanel = () => { if (panel.style.left) { const r = panel.getBoundingClientRect(); placePanel(r.left, r.top); } };
+  try { const p = JSON.parse(localStorage.getItem(POS_KEY)); if (p) requestAnimationFrame(() => placePanel(p.left, p.top)); } catch {}
+  addEventListener('resize', clampPanel);
+  panel.querySelector('h4').addEventListener('pointerdown', e => {
+    if (e.button !== 0 || e.target.closest('button')) return;
+    e.preventDefault();
+    const r = panel.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top;
+    const move = ev => placePanel(ev.clientX - dx, ev.clientY - dy);
+    const up = () => {
+      removeEventListener('pointermove', move); removeEventListener('pointerup', up);
+      const r2 = panel.getBoundingClientRect();
+      try { localStorage.setItem(POS_KEY, JSON.stringify({ left: r2.left, top: r2.top })); } catch {}
+    };
+    addEventListener('pointermove', move); addEventListener('pointerup', up);
+  });
+  // double-click the title bar to send it back to the bottom-right corner
+  panel.querySelector('h4').addEventListener('dblclick', e => {
+    if (e.target.closest('button')) return;
+    Object.assign(panel.style, { left: '', top: '', right: '', bottom: '' });
+    try { localStorage.removeItem(POS_KEY); } catch {}
+  });
   const status = (t) => { $('ea-status').textContent = t; };
   const btn = (label, fn, secondary) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; if (secondary) b.className = 'ea-secondary'; b.onclick = fn; $('ea-actions').appendChild(b); return b; };
 
